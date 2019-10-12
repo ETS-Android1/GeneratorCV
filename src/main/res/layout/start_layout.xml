@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StartActivity">
+
+    <ImageView
+        android:id="@+id/bgimage"
+        android:scaleType="centerCrop"
+        android:src="@drawable/office2"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bgdarker"/>
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="250dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_height="wrap_content"
+        android:text="Znajdź pracę, taką o jakiej marzysz"
+        android:textColor="#ffffff"
+        android:textSize="42sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:lineSpacingExtra="10dp"
+        />
+
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:text="Razem z nami stworzysz swoje CV, które ułatwi Ci znalezienie wymarzonej pracy"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView"
+        android:lineSpacingExtra="8dp"
+        />
+
+    <Button
+        android:id="@+id/createCvButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/orangebg"
+        android:text="Utwórz CV"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtitle"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

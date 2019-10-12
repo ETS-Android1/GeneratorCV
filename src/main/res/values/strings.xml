@@ -1,0 +1,32 @@
+<resources>
+    <string name="appName">Cv Genearator</string>
+    <string name="name">Imię</string>
+    <string name="surname">Nazwisko</string>
+    <string name="phoneNumber">Numer telefonu</string>
+    <string name="address">Adres zamieszkania</string>
+    <string name="choosePhoto">Wybierz zdjęcie</string>
+    <string name="email">E-mail</string>
+    <string name="street">Ulica</string>
+    <string name="houseNumber">123</string>
+    <string name="flatNumber">98</string>
+    <string name="city">Miasto</string>
+    <string name="postCode">00</string>
+    <string name="postCode2">100</string>
+    <string name="shortInfo">Krótka informacja o sobie, motto, cele, etc.</string>
+    <string name="next">Dalej</string>
+    <string name="birthDate">Data urodzenia:</string>
+    <string name="noPhoto">Nie wybrałeś zdjęcia</string>
+    <string name="somethingWentWrong">Coś poszło nie tak</string>
+    <string name="skills">Umiejętności</string>
+    <string name="skill">Umiejętność:</string>
+    <string name="hobbies">Zainteresowania</string>
+    <string name="hobby">Zainteresowanie:</string>
+    <string name="add">Dodaj</string>
+    <string name="cancel">Anuluj</string>
+    <string name="delete">USUŃ</string>
+    <string name="education">Edukacja</string>
+    <string name="edit">Edytuj</string>
+    <string name="beginDate">Data rozpoczęcia</string>
+    <string name="endDate">Data zakończenia</string>
+</resources>
+
