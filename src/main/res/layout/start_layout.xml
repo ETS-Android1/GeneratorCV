@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartActivity">
+    tools:context=".activities.StartActivity">
 
     <ImageView
         android:id="@+id/bgimage"
@@ -29,7 +29,7 @@
         android:layout_marginStart="50dp"
         android:layout_marginTop="30dp"
         android:layout_height="wrap_content"
-        android:text="Znajdź pracę, taką o jakiej marzysz"
+        android:text="@string/startTitle"
         android:textColor="#ffffff"
         android:textSize="42sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +45,7 @@
         android:layout_marginTop="50dp"
         android:textColor="#ffffff"
         android:textSize="18sp"
-        android:text="Razem z nami stworzysz swoje CV, które ułatwi Ci znalezienie wymarzonej pracy"
+        android:text="@string/startDescription"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleTextView"
         android:lineSpacingExtra="8dp"
@@ -58,7 +58,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginTop="50dp"
         android:background="@drawable/orangebg"
-        android:text="Utwórz CV"
+        android:text="@string/createCV"
         android:textColor="#ffffff"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"

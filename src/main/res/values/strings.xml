@@ -28,5 +28,15 @@
     <string name="edit">Edytuj</string>
     <string name="beginDate">Data rozpoczęcia</string>
     <string name="endDate">Data zakończenia</string>
+    <string name="experience">Doświadczenie</string>
+    <string name="courses">Kursy</string>
+    <string name="cvReady">Twoje CV jest gotowe!</string>
+    <string name="close">Zamknij</string>
+    <string name="success">Sukces!</string>
+    <string name="chooseTemplate">Wybór szablonu:</string>
+    <string name="createCV">Utwórz CV</string>
+    <string name="startTitle">Znajdź pracę o jakiej marzysz</string>
+    <string name="startDescription">Razem z nami stworzysz swoje CV, które ułatwi Ci znalezienie wymarzonej pracy</string>
 </resources>
+
 
