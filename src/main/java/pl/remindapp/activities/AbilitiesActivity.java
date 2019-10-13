@@ -1,4 +1,4 @@
-package pl.remindapp;
+package pl.remindapp.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -19,17 +19,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.remindapp.R;
 import pl.remindapp.adapters.AbilityAdapter;
 import pl.remindapp.cvObjects.Person;
 import pl.remindapp.models.AbilityModel;
 
-public class HobbiesActivity extends AppCompatActivity {
-    private ListView listView;
+public class AbilitiesActivity extends AppCompatActivity {
+    private ListView abilitiesListView;
     private AbilityAdapter abilityAdapter;
     private LinearLayout mainLayout;
     private Button addButton, nextButton;
-    private ArrayList<AbilityModel> carL;
-    private TextView titleTextView;
+    private ArrayList<AbilityModel> abilities;
     private Person user;
 
     @Override
@@ -42,15 +42,15 @@ public class HobbiesActivity extends AppCompatActivity {
         addButton = findViewById(R.id.addButton);
         nextButton = findViewById(R.id.nextButton);
         mainLayout = findViewById(R.id.abilitiesMainLayout);
-        listView = findViewById(R.id.listView);
+        abilitiesListView = findViewById(R.id.listView);
 
-        titleTextView = findViewById(R.id.titleTextView);
+        final TextView titleTextView = findViewById(R.id.titleTextView);
+        titleTextView.setText(R.string.skills);
 
-        titleTextView.setText(R.string.hobbies);
         mainLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                int heightDiff = mainLayout.getRootView().getHeight() - mainLayout.getHeight();
+                final int heightDiff = mainLayout.getRootView().getHeight() - mainLayout.getHeight();
                 if(heightDiff > 216){
                     LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -65,8 +65,8 @@ public class HobbiesActivity extends AppCompatActivity {
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             0, 0.6f
                     );
-                    float scale = getApplicationContext().getResources().getDisplayMetrics().density;
-                    int pixels = (int) (10 * scale + 0.5f);
+                    final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
+                    final int pixels = (int) (10 * scale + 0.5f);
                     param.setMargins(0,0,0, pixels);
                     addButton.setLayoutParams(param);
                     nextButton.setLayoutParams(param);
@@ -74,20 +74,19 @@ public class HobbiesActivity extends AppCompatActivity {
             }
         });
 
-        listView.setDivider(null);
-        carL = new ArrayList<AbilityModel>();
+        abilitiesListView.setDivider(null);
+        abilities = new ArrayList<AbilityModel>();
+        abilityAdapter = new AbilityAdapter(this, R.layout.ability_item, abilities);
 
-        abilityAdapter = new AbilityAdapter(this, R.layout.ability_item, carL);
-
-        listView.setAdapter(abilityAdapter);
+        abilitiesListView.setAdapter(abilityAdapter);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(HobbiesActivity.this);
-                builder.setTitle(R.string.hobby);
+                AlertDialog.Builder builder = new AlertDialog.Builder(AbilitiesActivity.this);
+                builder.setTitle(R.string.skill);
 
-                final EditText input = new EditText(HobbiesActivity.this);
+                final EditText input = new EditText(AbilitiesActivity.this);
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);
 
@@ -111,12 +110,12 @@ public class HobbiesActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> hobbies = new ArrayList<>();
+                List<String> skills = new ArrayList<>();
                 for(int i = 0; i < abilityAdapter.getCount(); i++){
-                    hobbies.add(abilityAdapter.getItem(i).toString());
+                    skills.add(abilityAdapter.getItem(i).toString());
                 }
-                user.setSkills(hobbies);
-                Intent intent = new Intent(HobbiesActivity.this, EducationActivity.class);
+                user.setSkills(skills);
+                Intent intent = new Intent(AbilitiesActivity.this, HobbiesActivity.class);
                 intent.putExtra("user_data", user);
                 startActivity(intent);
             }

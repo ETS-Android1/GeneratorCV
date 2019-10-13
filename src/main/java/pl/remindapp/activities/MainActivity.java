@@ -1,4 +1,4 @@
-package pl.remindapp;
+package pl.remindapp.activities;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -23,6 +23,8 @@ import android.widget.Toast;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import pl.remindapp.R;
+import pl.remindapp.cvObjects.Address;
 import pl.remindapp.cvObjects.Person;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
@@ -128,7 +130,8 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 }
 
                 if(true/*isEverythingCorrect*/){
-                    /*user.setName(((EditText)findViewById(R.id.nameEditText)).getText().toString());
+                    /*
+                    user.setName(((EditText)findViewById(R.id.nameEditText)).getText().toString());
                     user.setSurname(((EditText)findViewById(R.id.surnameEditText)).getText().toString());
                     user.setPhoneNumber(Integer.valueOf(((EditText)findViewById(R.id.phoneEditText)).getText().toString()));
                     user.setEmailAddress(((EditText)findViewById(R.id.emailEditText)).getText().toString());
@@ -136,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                             Integer.valueOf(((EditText)findViewById(R.id.flatNumberEditText)).getText().toString()),
                             Integer.valueOf(((EditText)findViewById(R.id.houseNumberEditText)).getText().toString()),
                             null,
-                            ((EditText)findViewById(R.id.postCodeEditText1)).getText().toString() + ((EditText)findViewById(R.id.postCodeEditText2)).getText().toString(),
+                            ((EditText)findViewById(R.id.postCodeEditText1)).getText().toString() + "-" +((EditText)findViewById(R.id.postCodeEditText2)).getText().toString(),
                             ((EditText)findViewById(R.id.cityEditText)).getText().toString());
                     user.setAddress(address);
                     user.setShortInfo(((EditText)findViewById(R.id.shortInfoEditText)).getText().toString());

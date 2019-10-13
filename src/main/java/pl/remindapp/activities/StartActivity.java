@@ -1,4 +1,4 @@
-package pl.remindapp;
+package pl.remindapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import pl.remindapp.R;
 
 public class StartActivity extends AppCompatActivity {
     @Override

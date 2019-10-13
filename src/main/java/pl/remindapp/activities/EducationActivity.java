@@ -1,8 +1,9 @@
-package pl.remindapp;
+package pl.remindapp.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -21,7 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
+import pl.remindapp.R;
 import pl.remindapp.adapters.LifeEventAdapter;
 import pl.remindapp.cvObjects.LifeEvent;
 import pl.remindapp.cvObjects.Person;
@@ -113,7 +116,7 @@ public class EducationActivity  extends AppCompatActivity implements DatePickerD
                 descriptionEditText.setHint("Opis");
 
                 final Button beginDateButton = new Button(EducationActivity.this);
-                beginDateButton.setText("Data rozpoczęcia");
+                beginDateButton.setText(R.string.beginDate);
                 beginDateButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -123,9 +126,21 @@ public class EducationActivity  extends AppCompatActivity implements DatePickerD
                     }
                 });
 
+                final Button endDateButton = new Button(EducationActivity.this);
+                endDateButton.setText(R.string.endDate);
+                endDateButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        whichDate = 2;
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(EducationActivity.this, AlertDialog.THEME_HOLO_DARK, EducationActivity.this, 1998, 5, 3);
+                        datePickerDialog.show();
+                    }
+                });
+
                 linearLayout.addView(titleEditText);
                 linearLayout.addView(descriptionEditText);
                 linearLayout.addView(beginDateButton);
+                linearLayout.addView(endDateButton);
 
                 builder.setView(linearLayout);
                 builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
@@ -148,7 +163,14 @@ public class EducationActivity  extends AppCompatActivity implements DatePickerD
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                List<LifeEvent> skills = new ArrayList<>();
+                for(int i = 0; i < lifeEventAdapter.getCount(); i++){
+                    skills.add(lifeEventAdapter.getItem(i));
+                }
+                user.setEducation(skills);
+                Intent intent = new Intent(EducationActivity.this, ExperienceActivity.class);
+                intent.putExtra("user_data", user);
+                startActivity(intent);
             }
         });
     }
