@@ -19,8 +19,10 @@
     <string name="somethingWentWrong">Coś poszło nie tak</string>
     <string name="skills">Umiejętności</string>
     <string name="skill">Umiejętność:</string>
+    <string name="skillExample">Obsługa pakietu Microsoft Office</string>
     <string name="hobbies">Zainteresowania</string>
     <string name="hobby">Zainteresowanie:</string>
+    <string name="hobbyExample">Piłka nożna</string>
     <string name="add">Dodaj</string>
     <string name="cancel">Anuluj</string>
     <string name="delete">USUŃ</string>

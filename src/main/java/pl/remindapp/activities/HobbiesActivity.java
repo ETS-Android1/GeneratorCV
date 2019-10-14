@@ -1,6 +1,7 @@
 package pl.remindapp.activities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -85,27 +86,40 @@ public class HobbiesActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(HobbiesActivity.this);
-                builder.setTitle(R.string.hobby);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(HobbiesActivity.this);
 
-                final EditText input = new EditText(HobbiesActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
+                final View customLayout = getLayoutInflater().inflate(R.layout.add_ability_layout, null);
 
-                builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+                final TextView title = customLayout.findViewById(R.id.addAbilityTitle);
+                title.setText(R.string.hobby);
+
+                final EditText input = customLayout.findViewById(R.id.addAbilityEditText);
+                input.setHint(R.string.hobbyExample);
+
+                builder.setView(customLayout);
+                final Dialog dialog = builder.create();
+                dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.gradient_rect));
+
+
+                final Button confirmButton = customLayout.findViewById(R.id.addAbilityConfirmButton);
+                confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(View v) {
                         addElementToListView(input.getText().toString());
+                        dialog.dismiss();
                     }
                 });
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+                final Button cancelButton = customLayout.findViewById(R.id.addAbilityCancelButton);
+                cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(View v) {
                         dialog.cancel();
                     }
                 });
 
-                builder.show();
+
+                dialog.show();
             }
         });
 
