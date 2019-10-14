@@ -51,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:background="#00ffffff"
                 android:textAlignment="center"
+                android:editable="false"
                 android:textSize="12sp"
                 android:textColor="#ffffff"
                 android:textColorHint="#87ffffff"/>
@@ -140,7 +141,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="2"/>
 
         <Button
             android:id="@+id/listItemDeleteButton"
@@ -155,10 +156,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
 
     </LinearLayout>
 

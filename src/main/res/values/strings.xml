@@ -39,6 +39,8 @@
     <string name="createCV">Utwórz CV</string>
     <string name="startTitle">Znajdź pracę o jakiej marzysz</string>
     <string name="startDescription">Razem z nami stworzysz swoje CV, które ułatwi Ci znalezienie wymarzonej pracy</string>
+    <string name="title">Tytuł</string>
+    <string name="description">Opis</string>
 </resources>
 
 

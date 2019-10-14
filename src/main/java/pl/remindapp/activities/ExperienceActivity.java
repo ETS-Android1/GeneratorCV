@@ -2,11 +2,10 @@ package pl.remindapp.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -29,7 +28,7 @@ import pl.remindapp.adapters.LifeEventAdapter;
 import pl.remindapp.cvObjects.LifeEvent;
 import pl.remindapp.cvObjects.Person;
 
-public class ExperienceActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class ExperienceActivity extends AppCompatActivity{
 
     private Person user;
     private LifeEventAdapter lifeEventAdapter;
@@ -38,7 +37,6 @@ public class ExperienceActivity extends AppCompatActivity implements DatePickerD
     private ArrayList<LifeEvent> lifeEventArrayList;
     private TextView titleTextView;
     private ListView listView;
-    private int whichDate; // 1 - begin, 2 - end
     private LocalDate beginDate, endDate;
 
     @Override
@@ -94,91 +92,99 @@ public class ExperienceActivity extends AppCompatActivity implements DatePickerD
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ExperienceActivity.this);
-                builder.setTitle("Dodawanie doświadczenie zawodowego:");
+                final AlertDialog.Builder builder = new AlertDialog.Builder(ExperienceActivity.this);
 
-                LinearLayout linearLayout = new LinearLayout(ExperienceActivity.this);
-                linearLayout.setOrientation(LinearLayout.VERTICAL);
+                final View customLayout = getLayoutInflater().inflate(R.layout.add_life_evenet_layout, null);
 
-                final EditText titleEditText = new EditText(ExperienceActivity.this);
-                titleEditText.setInputType(InputType.TYPE_CLASS_TEXT);
-                titleEditText.setHint("Tytuł");
+                final  TextView title = customLayout.findViewById(R.id.addLifeEventTitle);
+                title.setText(R.string.experience);
 
-                final EditText descriptionEditText = new EditText(ExperienceActivity.this);
-                descriptionEditText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                descriptionEditText.setHint("Opis");
+                final EditText titleEditText = customLayout.findViewById(R.id.addLifeEventTitleEditText);
+                final EditText descriptionEditText = customLayout.findViewById(R.id.addLifeEventDescriptionEditText);
 
-                final Button beginDateButton = new Button(ExperienceActivity.this);
-                beginDateButton.setText(R.string.beginDate);
-                beginDateButton.setOnClickListener(new View.OnClickListener() {
+                builder.setView(customLayout);
+                final Dialog dialog = builder.create();
+                dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.orange_gradient));
+
+
+                final Button confirmButton = customLayout.findViewById(R.id.addLifeEventConfirmButton);
+                confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        whichDate = 1;
-                        DatePickerDialog datePickerDialog = new DatePickerDialog(ExperienceActivity.this, AlertDialog.THEME_HOLO_DARK, ExperienceActivity.this, 1998, 5, 3);
-                        datePickerDialog.show();
-                    }
-                });
-
-                final Button endDateButton = new Button(ExperienceActivity.this);
-                endDateButton.setText(R.string.endDate);
-                endDateButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        whichDate = 2;
-                        DatePickerDialog datePickerDialog = new DatePickerDialog(ExperienceActivity.this, AlertDialog.THEME_HOLO_DARK, ExperienceActivity.this, 1998, 5, 3);
-                        datePickerDialog.show();
-                    }
-                });
-
-                linearLayout.addView(titleEditText);
-                linearLayout.addView(descriptionEditText);
-                linearLayout.addView(beginDateButton);
-                linearLayout.addView(endDateButton);
-
-                builder.setView(linearLayout);
-                builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
                         addElementToListView(titleEditText.getText().toString(), descriptionEditText.getText().toString());
+                        dialog.dismiss();
                     }
                 });
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+                final Button cancelButton = customLayout.findViewById(R.id.addLifeEventCancelButton);
+                cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(View v) {
                         dialog.cancel();
                     }
                 });
 
-                builder.show();
+                final TextView beginDateTextView = customLayout.findViewById(R.id.addLifeEventBeginDateTextView);
+                final Button beginDateButton = customLayout.findViewById(R.id.addLifeEventBeginDateButton);
+                beginDateButton.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onClick(View v) {
+                        DatePickerDialog datePickerDialog;
+                        if(beginDate == null)
+                            datePickerDialog = new DatePickerDialog(ExperienceActivity.this, AlertDialog.THEME_HOLO_DARK);
+                        else
+                            datePickerDialog = new DatePickerDialog(ExperienceActivity.this, AlertDialog.THEME_HOLO_DARK, null, beginDate.getYear(), beginDate.getMonthValue()-1, beginDate.getDayOfMonth());
+                        datePickerDialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                beginDate  = LocalDate.of(year, month+1, dayOfMonth);
+                                beginDateTextView.setText(beginDate.toString());
+                            }
+                        });
+                        datePickerDialog.show();
+                    }
+                });
+
+                final TextView endDateTextView = customLayout.findViewById(R.id.addLifeEventEndDateTextView);
+                final Button endDateButton = customLayout.findViewById(R.id.addLifeEventEndDateButton);
+                endDateButton.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onClick(View v) {
+                        DatePickerDialog datePickerDialog;
+                        if(endDate == null)
+                            datePickerDialog = new DatePickerDialog(ExperienceActivity.this, AlertDialog.THEME_HOLO_DARK);
+                        else
+                            datePickerDialog = new DatePickerDialog(ExperienceActivity.this, AlertDialog.THEME_HOLO_DARK, null, endDate.getYear(), endDate.getMonthValue()-1, endDate.getDayOfMonth());
+                        datePickerDialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                endDate  = LocalDate.of(year, month+1, dayOfMonth);
+                                endDateTextView.setText(endDate.toString());
+                            }
+                        });
+                        datePickerDialog.show();
+                    }
+                });
+
+                dialog.show();
             }
         });
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<LifeEvent> experience = new ArrayList<>();
+                List<LifeEvent> education = new ArrayList<>();
                 for(int i = 0; i < lifeEventAdapter.getCount(); i++){
-                    experience.add(lifeEventAdapter.getItem(i));
+                    education.add(lifeEventAdapter.getItem(i));
                 }
-                user.setExperience(experience);
+                user.setEducation(education);
                 Intent intent = new Intent(ExperienceActivity.this, CoursesActivity.class);
                 intent.putExtra("user_data", user);
                 startActivity(intent);
             }
         });
-    }
-
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        if(whichDate == 1){
-            beginDate = LocalDate.of(year, month, dayOfMonth);
-        }
-        else if(whichDate == 2){
-            endDate  = LocalDate.of(year, month, dayOfMonth);
-        }
     }
 
     private void addElementToListView(String title, String description){
