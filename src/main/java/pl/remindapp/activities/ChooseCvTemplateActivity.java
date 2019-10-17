@@ -39,7 +39,7 @@ public class ChooseCvTemplateActivity extends AppCompatActivity {
                 Intent intent = new Intent(ChooseCvTemplateActivity.this, SuccessfullActivity.class);
                 intent.putExtra("user_data", user);
                 startActivity(intent);
-                /*if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
+                if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
                     if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
                         String []permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
                         requestPermissions(permissions, STORAGE_CODE);
@@ -48,7 +48,7 @@ public class ChooseCvTemplateActivity extends AppCompatActivity {
                         savePDF();
                 }
                 else
-                    savePDF();*/
+                    savePDF();
             }
         });
     }
@@ -99,12 +99,22 @@ public class ChooseCvTemplateActivity extends AppCompatActivity {
     }
 
     private void savePDF() {
-        String filePath = Environment.getExternalStorageDirectory() + "/Download/test.pdf";
-        PdfGenerator pdfGenerator = new PdfGenerator(user, filePath, chosen);
+        String filePath = Environment.getExternalStorageDirectory() + "/Download/" + user.getName() + user.getSurname() +"CV.pdf";
+        int maxFontSize = 30;
+        int numberOfPage;
+        PdfGenerator pdfGenerator = new PdfGenerator(user, filePath, chosen, maxFontSize);
+        numberOfPage = pdfGenerator.generateCv();
 
-        if(pdfGenerator.generateCv())
-            Toast.makeText(this, "File created in: " + filePath , Toast.LENGTH_SHORT).show();
+        while( numberOfPage > 1){
+            System.out.println(maxFontSize);
+            maxFontSize--;
+            pdfGenerator.setFontSize(maxFontSize);
+            numberOfPage = pdfGenerator.generateCv();
+        }
+
+        if(numberOfPage == 1)
+            Toast.makeText(this, "File created in: " + filePath , Toast.LENGTH_LONG).show();
         else
-            Toast.makeText(this, "Creating file failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Creating file failed", Toast.LENGTH_LONG).show();
     }
 }
