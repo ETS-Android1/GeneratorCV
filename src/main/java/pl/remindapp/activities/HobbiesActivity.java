@@ -78,6 +78,9 @@ public class HobbiesActivity extends AppCompatActivity {
 
         listView.setDivider(null);
         carL = new ArrayList<AbilityModel>();
+        for(String element : user.getInterest()){
+            carL.add(new AbilityModel(element));
+        }
 
         abilityAdapter = new AbilityAdapter(this, R.layout.ability_item, carL);
 
@@ -130,7 +133,7 @@ public class HobbiesActivity extends AppCompatActivity {
                 for(int i = 0; i < abilityAdapter.getCount(); i++){
                     hobbies.add(abilityAdapter.getItem(i).toString());
                 }
-                user.setSkills(hobbies);
+                user.setInterest(hobbies);
                 Intent intent = new Intent(HobbiesActivity.this, EducationActivity.class);
                 intent.putExtra("user_data", user);
                 startActivity(intent);

@@ -78,6 +78,9 @@ public class AbilitiesActivity extends AppCompatActivity {
 
         abilitiesListView.setDivider(null);
         abilities = new ArrayList<AbilityModel>();
+        for(String element : user.getSkills()){
+            abilities.add(new AbilityModel(element));
+        }
         abilityAdapter = new AbilityAdapter(this, R.layout.ability_item, abilities);
 
         abilitiesListView.setAdapter(abilityAdapter);

@@ -85,7 +85,7 @@ public class EducationActivity  extends AppCompatActivity{
 
         lifeEventArrayList = new ArrayList<LifeEvent>();
 
-        lifeEventAdapter = new LifeEventAdapter(this, R.layout.life_event_list_item, lifeEventArrayList);
+        lifeEventAdapter = new LifeEventAdapter(this, R.layout.life_event_list_item, user.getEducation());
 
         listView.setAdapter(lifeEventAdapter);
 

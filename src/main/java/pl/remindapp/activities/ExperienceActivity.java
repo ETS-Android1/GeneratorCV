@@ -85,7 +85,7 @@ public class ExperienceActivity extends AppCompatActivity{
 
         lifeEventArrayList = new ArrayList<LifeEvent>();
 
-        lifeEventAdapter = new LifeEventAdapter(this, R.layout.life_event_list_item, lifeEventArrayList);
+        lifeEventAdapter = new LifeEventAdapter(this, R.layout.life_event_list_item, user.getExperience());
 
         listView.setAdapter(lifeEventAdapter);
 
@@ -175,11 +175,11 @@ public class ExperienceActivity extends AppCompatActivity{
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<LifeEvent> education = new ArrayList<>();
+                List<LifeEvent> experience = new ArrayList<>();
                 for(int i = 0; i < lifeEventAdapter.getCount(); i++){
-                    education.add(lifeEventAdapter.getItem(i));
+                    experience.add(lifeEventAdapter.getItem(i));
                 }
-                user.setEducation(education);
+                user.setExperience(experience);
                 Intent intent = new Intent(ExperienceActivity.this, CoursesActivity.class);
                 intent.putExtra("user_data", user);
                 startActivity(intent);

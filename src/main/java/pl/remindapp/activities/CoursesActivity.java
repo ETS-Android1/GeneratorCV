@@ -83,7 +83,7 @@ public class CoursesActivity extends AppCompatActivity {
 
         lifeEventArrayList = new ArrayList<LifeEvent>();
 
-        lifeEventAdapter = new LifeEventAdapter(this, R.layout.life_event_list_item, lifeEventArrayList);
+        lifeEventAdapter = new LifeEventAdapter(this, R.layout.life_event_list_item, user.getCourses());
 
         listView.setAdapter(lifeEventAdapter);
 
@@ -177,7 +177,7 @@ public class CoursesActivity extends AppCompatActivity {
                 for (int i = 0; i < lifeEventAdapter.getCount(); i++) {
                     courses.add(lifeEventAdapter.getItem(i));
                 }
-                user.setEducation(courses);
+                user.setCourses(courses);
                 Intent intent = new Intent(CoursesActivity.this, ChooseCvTemplateActivity.class);
                 intent.putExtra("user_data", user);
                 startActivity(intent);
