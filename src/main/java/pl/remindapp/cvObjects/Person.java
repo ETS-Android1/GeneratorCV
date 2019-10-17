@@ -1,7 +1,5 @@
 package pl.remindapp.cvObjects;
 
-import android.net.Uri;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,5 +22,6 @@ public class Person implements Serializable {
     private List<LifeEvent> experience;
     private List<LifeEvent>  courses;
     private List<LifeEvent>  education;
-    private Uri imageFile;
+    private String imageFile;
+    private int rotationAngle;
 }
