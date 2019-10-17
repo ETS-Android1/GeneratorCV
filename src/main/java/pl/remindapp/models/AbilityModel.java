@@ -9,4 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AbilityModel {
     String ability;
+
+    @Override
+    public String toString() {
+        return ability;
+    }
 }
