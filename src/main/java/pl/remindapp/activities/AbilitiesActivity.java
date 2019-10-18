@@ -4,16 +4,21 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,34 +59,23 @@ public class AbilitiesActivity extends AppCompatActivity {
             public void onGlobalLayout() {
                 final int heightDiff = mainLayout.getRootView().getHeight() - mainLayout.getHeight();
                 if(heightDiff > 216){
-                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            0, 0.0f
-                    );
-                    param.setMargins(0,0,0, 0);
-                    addButton.setLayoutParams(param);
-                    nextButton.setLayoutParams(param);
+                    nextButton.setVisibility(View.INVISIBLE);
+                    addButton.setVisibility(View.INVISIBLE);
                 }
                 else{
-                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            0, 0.6f
-                    );
-                    final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
-                    final int pixels = (int) (10 * scale + 0.5f);
-                    param.setMargins(0,0,0, pixels);
-                    addButton.setLayoutParams(param);
-                    nextButton.setLayoutParams(param);
+                    nextButton.setVisibility(View.VISIBLE);
+                    addButton.setVisibility(View.VISIBLE);
                 }
             }
         });
+
 
         abilitiesListView.setDivider(null);
         abilities = new ArrayList<AbilityModel>();
         for(String element : user.getSkills()){
             abilities.add(new AbilityModel(element));
         }
-        abilityAdapter = new AbilityAdapter(this, R.layout.ability_item, abilities);
+        abilityAdapter = new AbilityAdapter(this.getBaseContext(), R.layout.ability_item, abilities);
 
         abilitiesListView.setAdapter(abilityAdapter);
 
@@ -93,6 +87,7 @@ public class AbilitiesActivity extends AppCompatActivity {
                 final View customLayout = getLayoutInflater().inflate(R.layout.add_ability_layout, null);
 
                 final EditText input = customLayout.findViewById(R.id.addAbilityEditText);
+                input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
                 builder.setView(customLayout);
                 final Dialog dialog = builder.create();

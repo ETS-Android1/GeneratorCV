@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -58,25 +59,14 @@ public class CoursesActivity extends AppCompatActivity {
         mainLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                int heightDiff = mainLayout.getRootView().getHeight() - mainLayout.getHeight();
-                if (heightDiff > 216) {
-                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            0, 0.0f
-                    );
-                    param.setMargins(0, 0, 0, 0);
-                    addButton.setLayoutParams(param);
-                    nextButton.setLayoutParams(param);
-                } else {
-                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            0, 0.6f
-                    );
-                    float scale = getApplicationContext().getResources().getDisplayMetrics().density;
-                    int pixels = (int) (10 * scale + 0.5f);
-                    param.setMargins(0, 0, 0, pixels);
-                    addButton.setLayoutParams(param);
-                    nextButton.setLayoutParams(param);
+                final int heightDiff = mainLayout.getRootView().getHeight() - mainLayout.getHeight();
+                if(heightDiff > 216){
+                    nextButton.setVisibility(View.INVISIBLE);
+                    addButton.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    nextButton.setVisibility(View.VISIBLE);
+                    addButton.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -98,7 +88,10 @@ public class CoursesActivity extends AppCompatActivity {
                 title.setText(R.string.courses);
 
                 final EditText titleEditText = customLayout.findViewById(R.id.addLifeEventTitleEditText);
+                titleEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+
                 final EditText descriptionEditText = customLayout.findViewById(R.id.addLifeEventDescriptionEditText);
+                descriptionEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
                 builder.setView(customLayout);
                 final Dialog dialog = builder.create();

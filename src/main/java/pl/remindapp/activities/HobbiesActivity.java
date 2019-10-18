@@ -52,26 +52,14 @@ public class HobbiesActivity extends AppCompatActivity {
         mainLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                int heightDiff = mainLayout.getRootView().getHeight() - mainLayout.getHeight();
+                final int heightDiff = mainLayout.getRootView().getHeight() - mainLayout.getHeight();
                 if(heightDiff > 216){
-                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            0, 0.0f
-                    );
-                    param.setMargins(0,0,0, 0);
-                    addButton.setLayoutParams(param);
-                    nextButton.setLayoutParams(param);
+                    nextButton.setVisibility(View.INVISIBLE);
+                    addButton.setVisibility(View.INVISIBLE);
                 }
                 else{
-                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            0, 0.6f
-                    );
-                    float scale = getApplicationContext().getResources().getDisplayMetrics().density;
-                    int pixels = (int) (10 * scale + 0.5f);
-                    param.setMargins(0,0,0, pixels);
-                    addButton.setLayoutParams(param);
-                    nextButton.setLayoutParams(param);
+                    nextButton.setVisibility(View.VISIBLE);
+                    addButton.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -98,6 +86,7 @@ public class HobbiesActivity extends AppCompatActivity {
 
                 final EditText input = customLayout.findViewById(R.id.addAbilityEditText);
                 input.setHint(R.string.hobbyExample);
+                input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
                 builder.setView(customLayout);
                 final Dialog dialog = builder.create();

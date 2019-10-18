@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 checkEditTextIsEmpty(R.id.emailEditText);
                 checkEditTextIsEmpty(R.id.streetEditText);
                 checkEditTextIsEmpty(R.id.phoneEditText);
-                checkEditTextIsEmpty(R.id.cityEditText);System.out.println("klik");
+                checkEditTextIsEmpty(R.id.cityEditText);
                 checkEditTextIsEmpty(R.id.houseNumberEditText);
 
                 EditText shortInfoEditText = findViewById(R.id.shortInfoEditText);
