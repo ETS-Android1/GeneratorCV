@@ -106,36 +106,70 @@ public class PdfGenerator {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private PdfPCell addCrucialInfoContainer() {
+        int i = 0;
         PdfPCell data = new PdfPCell();
         data.setBorder(Rectangle.NO_BORDER);
         data.setPadding(30);
 
         data.addElement(crucialDataParagraph(user.getShortInfo()));
 
-        Paragraph p1 = crucialDataTitle("• DOŚWIADCZENIE");
-        data.addElement(p1);
-        for (LifeEvent e : user.getExperience()) {
-            data.addElement(lifeEventTitleParagraph(e));
-            data.addElement(lifeEventDescriptionParagraph(e));
+        if(!user.getExperience().isEmpty()) {
+            Paragraph p1 = crucialDataTitle("• DOŚWIADCZENIE");
+            data.addElement(p1);
+            for (LifeEvent e : user.getExperience()) {
+                if(i == 0){
+                    Paragraph temp = lifeEventTitleParagraph(e);
+                    temp.setSpacingBefore(3);
+                    data.addElement(temp);
+                }else {
+                    data.addElement(lifeEventTitleParagraph(e));
+                }
+                data.addElement(lifeEventDescriptionParagraph(e));
+                i++;
+            }
         }
 
-        data.addElement(crucialDataTitle("• WYKSZTAŁCENIE"));
-        for(LifeEvent e: user.getEducation()){
-            data.addElement(lifeEventTitleParagraph(e));
-            data.addElement(lifeEventDescriptionParagraph(e));
+        i=0;
+        if(!user.getEducation().isEmpty()) {
+            data.addElement(crucialDataTitle("• WYKSZTAŁCENIE"));
+            for (LifeEvent e : user.getEducation()) {
+                if(i == 0){
+                    Paragraph temp = lifeEventTitleParagraph(e);
+                    temp.setSpacingBefore(3);
+                    data.addElement(temp);
+                }else {
+                    data.addElement(lifeEventTitleParagraph(e));
+                }
+                data.addElement(lifeEventDescriptionParagraph(e));
+                i++;
+            }
         }
 
-        data.addElement(crucialDataTitle("• KURSY I SZKOLENIA"));
-        for (LifeEvent e : user.getCourses()) {
-            data.addElement(lifeEventTitleParagraph(e));
-            data.addElement(lifeEventDescriptionParagraph(e));
+        i=0;
+        if(!user.getCourses().isEmpty()) {
+            data.addElement(crucialDataTitle("• KURSY I SZKOLENIA"));
+            for (LifeEvent e : user.getCourses()) {
+                if(i == 0){
+                    Paragraph temp = lifeEventTitleParagraph(e);
+                    temp.setSpacingBefore(3);
+                    data.addElement(temp);
+                }else {
+                    data.addElement(lifeEventTitleParagraph(e));
+                }
+                data.addElement(lifeEventDescriptionParagraph(e));
+                i++;
+            }
         }
 
-        data.addElement(crucialDataTitle("• UMIEJĘTNOŚCI"));//.setMarginBottom(fontSize));
-        list(user.getSkills(), data);
+        if(!user.getSkills().isEmpty()) {
+            data.addElement(crucialDataTitle("• UMIEJĘTNOŚCI"));//.setMarginBottom(fontSize));
+            list(user.getSkills(), data);
+        }
 
-        data.addElement(crucialDataTitle("• ZAINTERESOWANIA"));//.setMarginBottom(fontSize));
-        list(user.getInterest(), data);
+        if(!user.getInterest().isEmpty()) {
+            data.addElement(crucialDataTitle("• ZAINTERESOWANIA"));//.setMarginBottom(fontSize));
+            list(user.getInterest(), data);
+        }
 
         Paragraph p = new Paragraph("Wyrażam zgodę na przetwarzanie moich danych osobowych dla potrzeb niezbędnych do realizacji" +
                 " procesu tej oraz przyszłych rekrutacji (zgodnie z ustawą z dnia 10 maja 2018 roku o ochronie danych osobowych" +
@@ -189,7 +223,7 @@ public class PdfGenerator {
         }
         else {
             lifeEventDescriptionParagraph.setFont(font);
-            lifeEventDescriptionParagraph.setLeading(fontSize);
+            lifeEventDescriptionParagraph.setLeading(fontSize+1);
             lifeEventDescriptionParagraph.setAlignment(Element.ALIGN_LEFT);
             lifeEventDescriptionParagraph.add(event.getDescription());
         }
@@ -230,7 +264,7 @@ public class PdfGenerator {
 
         title.add(titleText);
 
-        title.setSpacingBefore(fontSize+8);
+        title.setSpacingBefore(fontSize+4);
         return title;
     }
 
