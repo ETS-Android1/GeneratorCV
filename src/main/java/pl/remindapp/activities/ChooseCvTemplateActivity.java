@@ -1,6 +1,7 @@
 package pl.remindapp.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -9,12 +10,19 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.FadingCircle;
+
+import java.util.Collections;
+
+import pl.remindapp.GenerateCVTask;
 import pl.remindapp.PdfGenerator;
 import pl.remindapp.R;
 import pl.remindapp.cvObjects.Person;
@@ -22,68 +30,89 @@ import pl.remindapp.cvObjects.Person;
 public class ChooseCvTemplateActivity extends AppCompatActivity {
 
     private static final int STORAGE_CODE = 1000;
-    private int chosen;
     private Person user;
+    private final String USER_DATA = "user_data";
+    private boolean letBack;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.cv_templates_layout);
-        user = (Person) getIntent().getSerializableExtra("user_data");
-        chosen = 0;
+    public void onBackPressed() {
+        if(letBack) {
+            System.out.println(user.getChosenTemplate());
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra(USER_DATA, user);
 
-        Button nextButton = findViewById(R.id.nextTemplateButton);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ChooseCvTemplateActivity.this, SuccessfullActivity.class);
-                intent.putExtra("user_data", user);
-                startActivity(intent);
-                if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
-                    if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                        String []permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                        requestPermissions(permissions, STORAGE_CODE);
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+        }
+    }
+
+    @Override
+        protected void onCreate(@Nullable Bundle savedInstanceState) {
+        letBack = true;
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.cv_templates_layout);
+            user = (Person) getIntent().getSerializableExtra(USER_DATA);
+
+        System.out.println(user.getChosenTemplate());
+            if(user.getChosenTemplate() == 0){
+                change(null);
+            }
+
+            if(user.getChosenTemplate() == 1){
+                change1(null);
+            }
+
+            if(user.getChosenTemplate() == 2){
+                change2(null);
+            }
+
+
+            Button nextButton = findViewById(R.id.nextTemplateButton);
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
+                        if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                            String []permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                            requestPermissions(permissions, STORAGE_CODE);
+                        }
+                        else
+                            savePDF();
                     }
                     else
                         savePDF();
                 }
-                else
-                    savePDF();
-            }
-        });
-    }
+            });
+        }
 
     public void change(View v){
-        Toast.makeText(this, "Clicked!", Toast.LENGTH_SHORT).show();
         ImageView imageView = findViewById(R.id.templateButton);
         imageView.setImageResource(R.drawable.ok);
-        ImageView imageView1 = findViewById(R.id.template1Button);
-        imageView1.setImageResource(R.drawable.no_ok);
-        ImageView imageView2= findViewById(R.id.template2Button);
-        imageView2.setImageResource(R.drawable.no_ok);
-        chosen = 0;
+//        ImageView imageView1 = findViewById(R.id.template1Button);
+//        imageView1.setImageResource(R.drawable.no_ok);
+//        ImageView imageView2= findViewById(R.id.template2Button);
+//        imageView2.setImageResource(R.drawable.no_ok);
+        user.setChosenTemplate(0);
     }
 
     public void change1(View v){
-        Toast.makeText(this, "Clicked!", Toast.LENGTH_SHORT).show();
         ImageView imageView = findViewById(R.id.templateButton);
         imageView.setImageResource(R.drawable.no_ok);
-        ImageView imageView1 = findViewById(R.id.template1Button);
-        imageView1.setImageResource(R.drawable.ok);
-        ImageView imageView2= findViewById(R.id.template2Button);
-        imageView2.setImageResource(R.drawable.no_ok);
-        chosen = 1;
+//        ImageView imageView1 = findViewById(R.id.template1Button);
+//        imageView1.setImageResource(R.drawable.ok);
+//        ImageView imageView2= findViewById(R.id.template2Button);
+//        imageView2.setImageResource(R.drawable.no_ok);
+        user.setChosenTemplate(1);
     }
 
     public void change2(View v){
-        Toast.makeText(this, "Clicked!", Toast.LENGTH_SHORT).show();
         ImageView imageView = findViewById(R.id.templateButton);
         imageView.setImageResource(R.drawable.no_ok);
-        ImageView imageView1 = findViewById(R.id.template1Button);
-        imageView1.setImageResource(R.drawable.no_ok);
-        ImageView imageView2= findViewById(R.id.template2Button);
-        imageView2.setImageResource(R.drawable.ok);
-        chosen = 2;
+//        ImageView imageView1 = findViewById(R.id.template1Button);
+//        imageView1.setImageResource(R.drawable.no_ok);
+//        ImageView imageView2= findViewById(R.id.template2Button);
+//        imageView2.setImageResource(R.drawable.ok);
+        user.setChosenTemplate(2);
     }
 
     @Override
@@ -101,20 +130,19 @@ public class ChooseCvTemplateActivity extends AppCompatActivity {
     private void savePDF() {
         String filePath = Environment.getExternalStorageDirectory() + "/Download/" + user.getName() + user.getSurname() +"CV.pdf";
         int maxFontSize = 30;
-        int numberOfPage;
-        PdfGenerator pdfGenerator = new PdfGenerator(user, filePath, chosen, maxFontSize);
-        numberOfPage = pdfGenerator.generateCv();
+        Collections.sort(user.getExperience());
+        Collections.sort(user.getEducation());
+        Collections.sort(user.getCourses());
 
-        while( numberOfPage > 1){
-            System.out.println(maxFontSize);
-            maxFontSize--;
-            pdfGenerator.setFontSize(maxFontSize);
-            numberOfPage = pdfGenerator.generateCv();
-        }
+        new GenerateCVTask(this).execute(new PdfGenerator(user, filePath, user.getChosenTemplate(), maxFontSize));
 
-        if(numberOfPage == 1)
-            Toast.makeText(this, "File created in: " + filePath , Toast.LENGTH_LONG).show();
-        else
-            Toast.makeText(this, "Creating file failed", Toast.LENGTH_LONG).show();
+    }
+
+    public void setAnimate() {
+        letBack = false;
+        setContentView(R.layout.loading_window);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.spin_kit);
+        Sprite fadingCircle = new FadingCircle();
+        progressBar.setIndeterminateDrawable(fadingCircle);
     }
 }
