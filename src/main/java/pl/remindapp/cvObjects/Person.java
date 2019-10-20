@@ -15,7 +15,7 @@ public class Person implements Serializable {
     private String emailAddress;
     private String shortInfo;
     private LocalDate dateOfBirth;
-    private int phoneNumber;
+    private Integer phoneNumber;
     private Address address;
     private List<String> interest;
     private List<String> skills;
@@ -24,4 +24,5 @@ public class Person implements Serializable {
     private List<LifeEvent>  education;
     private String imageFile;
     private int rotationAngle;
+    private int chosenTemplate;
 }
