@@ -42,35 +42,43 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     private boolean isEverythingCorrect;
     private Person user;
     private int rotation;
+    private final int ABILITIES_CODE = 123;
+    private final String USER_DATA = "user_data";
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == RESULT_OK) {
-            try {
-                ImageView imageView = findViewById(R.id.imageView);
-                final Uri imageUri = data.getData();
-                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+        if(requestCode == ABILITIES_CODE && resultCode == RESULT_OK && data != null && data.getSerializableExtra(USER_DATA) != null ){
+            user = (Person)data.getSerializableExtra(USER_DATA);
+            fillPersonalData();
 
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                selectedImage.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
-                byte[] imageBytes = byteArrayOutputStream.toByteArray();
-                String imageString = Base64.encodeBytes(imageBytes);
-                user.setImageFile(imageString);
+        }
+        else {
+            if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+                try {
+                    ImageView imageView = findViewById(R.id.imageView);
+                    final Uri imageUri = data.getData();
+                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
 
-                imageView.setImageBitmap(selectedImage);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    selectedImage.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
+                    byte[] imageBytes = byteArrayOutputStream.toByteArray();
+                    String imageString = Base64.encodeBytes(imageBytes);
+                    user.setImageFile(imageString);
 
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Toast.makeText(this, R.string.somethingWentWrong, Toast.LENGTH_LONG).show();
+                    imageView.setImageBitmap(selectedImage);
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, R.string.somethingWentWrong, Toast.LENGTH_LONG).show();
+                }
+
+            } else {
+                Toast.makeText(this, R.string.noPhoto, Toast.LENGTH_LONG).show();
             }
-
-        }else {
-            Toast.makeText(this, R.string.noPhoto,Toast.LENGTH_LONG).show();
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,87 +95,30 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         });
 
         user = new Person();
-        user.setName("Aleksander");
-        user.setSurname("Obiekttestowy");
-        user.setPhoneNumber(123456789);
-        user.setEmailAddress("martinNowak@gmail.com");
-        user.setDateOfBirth(LocalDate.now());
-        user.setShortInfo("SLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet " +
-                "ipsum tempus lacus laoreet facilisis. Suspendisse tincidunt massa accumsan pellentesque" +
-                " tincidunt. Ut lorem turpis, pellentesque sed quam eget, suscipit scelerisque augue. Nulla " +
-                "placerat vestibulum urna, venenatis bibendum quam cursus id. Vestibulum lobortis, tellus et" +
-                " gravida tincidunt, erat lectus pharetra risus, id cursus urna nunc nec est. Curabitur aliquet," +
-                " purus a elementum auctor, felis quam commodo sapien, ac placerat tortor diam euismod lorem. Vestibulum" +
-                " faucibus dui sed mauris posuere egestas. Proin luctus at arcu id dignissim. Suspendisse " +
-                "ac augue malesuada, dictum metus eu, bibendum justo. Morbi id metus finibus odio tincidunt " +
-                "blandit. Suspendisse quis lacinia sem. Vivamus laoreet tristique tristique. Sed fermentum" +
-                " lacus nulla, ac pulvinar ipsum convallis eu. Donec vitae porttitor velit. Vivamus tempus" +
-                " congue mollis. Quisque ac condimentum est, et euismod sapien. ");
-        user.setAddress(new Address("Orzeszkowa",2,3, null, "87-100","Toruń"));
+        user.setChosenTemplate(0);
+        user.setName("");
+        user.setSurname("");
+        user.setEmailAddress("");
+        user.setDateOfBirth(null);
+        user.setShortInfo("");
+        user.setAddress(new Address());
 
         List<String> skills  = new ArrayList<>();
-        skills.add("skill1");
-        skills.add("skill2");
-        skills.add("skill1");
-        skills.add("skill2");
-        skills.add("skill1");
-        skills.add("skill2");
         user.setSkills(skills);
 
         List<String> hobby  = new ArrayList<>();
-        hobby.add("hobby1");
-        hobby.add("hobby2");
-        hobby.add("hobby1");
-        hobby.add("hobby2");
-        hobby.add("hobby1");
-        hobby.add("hobby2");
         user.setInterest(hobby);
 
         List<LifeEvent> education = new ArrayList<>();
-        education.add(new LifeEvent( LocalDate.now(), LocalDate.now() ,"Npwy kurs", "SLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet " +
-                "ipsum tempus lacus laoreet facilisis. Suspendisse tincidunt massa accumsan pellentesque" +
-                " tincidunt. Ut lorem turpis, pellentesque sed quam eget, suscipit scelerisque augue. Nulla " +
-                "placerat vestibulum urna, venenatis bibendum quam cursus id. Vestibulum lobortis, tellus et"));
-        education.add(new LifeEvent( LocalDate.now(), LocalDate.now() ,"Npwy kurs", "SLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet " +
-                "ipsum tempus lacus laoreet facilisis. Suspendisse tincidunt massa accumsan pellentesque" +
-                " tincidunt. Ut lorem turpis, pellentesque sed quam eget, suscipit scelerisque augue. Nulla " +
-                "placerat vestibulum urna, venenatis bibendum quam cursus id. Vestibulum lobortis, tellus et"));
-        education.add(new LifeEvent( LocalDate.now(), LocalDate.now() ,"Npwy kurs", "SLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet " +
-                "ipsum tempus lacus laoreet facilisis. Suspendisse tincidunt massa accumsan pellentesque" +
-                " tincidunt. Ut lorem turpis, pellentesque sed quam eget, suscipit scelerisque augue. Nulla " +
-                "placerat vestibulum urna, venenatis bibendum quam cursus id. Vestibulum lobortis, tellus et"));
         user.setEducation(education);
 
         List<LifeEvent> experience = new ArrayList<>();
-        experience.add(new LifeEvent( LocalDate.now(), LocalDate.now() ,"Npwy kurs", "SLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet " +
-                "ipsum tempus lacus laoreet facilisis. Suspendisse tincidunt massa accumsan pellentesque" +
-                " tincidunt. Ut lorem turpis, pellentesque sed quam eget, suscipit scelerisque augue. Nulla " +
-                "placerat vestibulum urna, venenatis bibendum quam cursus id. Vestibulum lobortis, tellus et"));
-        experience.add(new LifeEvent( LocalDate.now(), LocalDate.now() ,"Npwy kurs", "SLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet " +
-                "ipsum tempus lacus laoreet facilisis. Suspendisse tincidunt massa accumsan pellentesque" +
-                " tincidunt. Ut lorem turpis, pellentesque sed quam eget, suscipit scelerisque augue. Nulla " +
-                "placerat vestibulum urna, venenatis bibendum quam cursus id. Vestibulum lobortis, tellus et"));
-        experience.add(new LifeEvent( LocalDate.now(), LocalDate.now() ,"Npwy kurs", "SLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet " +
-                "ipsum tempus lacus laoreet facilisis. Suspendisse tincidunt massa accumsan pellentesque" +
-                " tincidunt. Ut lorem turpis, pellentesque sed quam eget, suscipit scelerisque augue. Nulla " +
-                "placerat vestibulum urna, venenatis bibendum quam cursus id. Vestibulum lobortis, tellus et"));
         user.setExperience(experience);
 
         List<LifeEvent> courses = new ArrayList<>();
-        courses.add(new LifeEvent( LocalDate.now(), LocalDate.now() ,"Npwy kurs", "SLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet " +
-                "ipsum tempus lacus laoreet facilisis. Suspendisse tincidunt massa accumsan pellentesque" +
-                " tincidunt. Ut lorem turpis, pellentesque sed quam eget, suscipit scelerisque augue. Nulla " +
-                "placerat vestibulum urna, venenatis bibendum quam cursus id. Vestibulum lobortis, tellus et"));
-        courses.add(new LifeEvent( LocalDate.now(), LocalDate.now() ,"Npwy kurs", "SLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet " +
-                "ipsum tempus lacus laoreet facilisis. Suspendisse tincidunt massa accumsan pellentesque" +
-                " tincidunt. Ut lorem turpis, pellentesque sed quam eget, suscipit scelerisque augue. Nulla " +
-                "placerat vestibulum urna, venenatis bibendum quam cursus id. Vestibulum lobortis, tellus et"));
-        courses.add(new LifeEvent( LocalDate.now(), LocalDate.now() ,"Npwy kurs", "SLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet " +
-                "ipsum tempus lacus laoreet facilisis. Suspendisse tincidunt massa accumsan pellentesque" +
-                " tincidunt. Ut lorem turpis, pellentesque sed quam eget, suscipit scelerisque augue. Nulla " +
-                "placerat vestibulum urna, venenatis bibendum quam cursus id. Vestibulum lobortis, tellus et"));
-        courses.add(new LifeEvent( LocalDate.now(), LocalDate.now() ,"Npwy kurs", ""));
         user.setCourses(courses);
+
+        fillPersonalData();
 
         Button rotateButton = findViewById(R.id.rotateButton);
         rotateButton.setOnClickListener(new View.OnClickListener() {
@@ -210,9 +161,16 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 checkEditTextIsEmpty(R.id.surnameEditText);
                 checkEditTextIsEmpty(R.id.emailEditText);
                 checkEditTextIsEmpty(R.id.streetEditText);
-                checkEditTextIsEmpty(R.id.phoneEditText);
                 checkEditTextIsEmpty(R.id.cityEditText);
                 checkEditTextIsEmpty(R.id.houseNumberEditText);
+
+                EditText phoneEditText = findViewById(R.id.phoneEditText);
+                if(phoneEditText.getText().length() == 9)
+                    phoneEditText.setBackground(getDrawable(R.drawable.edit_text_green));
+                else{
+                    phoneEditText.setBackground(getDrawable(R.drawable.edit_text_red));
+                    isEverythingCorrect = false;
+                }
 
                 EditText shortInfoEditText = findViewById(R.id.shortInfoEditText);
                 shortInfoEditText.setBackground(getDrawable(R.drawable.edit_text_green));
@@ -236,39 +194,47 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                     isEverythingCorrect = false;
                 }
 
-                if(true/*isEverythingCorrect*/){
-                    /*
+                if(isEverythingCorrect){
                     user.setName(((EditText)findViewById(R.id.nameEditText)).getText().toString());
                     user.setSurname(((EditText)findViewById(R.id.surnameEditText)).getText().toString());
                     user.setPhoneNumber(Integer.valueOf(((EditText)findViewById(R.id.phoneEditText)).getText().toString()));
                     user.setEmailAddress(((EditText)findViewById(R.id.emailEditText)).getText().toString());
+                    Integer flatNumber = -1;
+                    if(!((EditText)findViewById(R.id.flatNumberEditText)).getText().toString().equals("")){
+                        flatNumber = Integer.valueOf(((EditText)findViewById(R.id.flatNumberEditText)).getText().toString());
+                    }
+
                     Address address = new Address(((EditText)findViewById(R.id.streetEditText)).getText().toString(),
-                            Integer.valueOf(((EditText)findViewById(R.id.flatNumberEditText)).getText().toString()),
                             Integer.valueOf(((EditText)findViewById(R.id.houseNumberEditText)).getText().toString()),
+                            flatNumber,
                             null,
                             ((EditText)findViewById(R.id.postCodeEditText1)).getText().toString() + "-" +((EditText)findViewById(R.id.postCodeEditText2)).getText().toString(),
                             ((EditText)findViewById(R.id.cityEditText)).getText().toString());
                     user.setAddress(address);
                     user.setShortInfo(((EditText)findViewById(R.id.shortInfoEditText)).getText().toString());
                     user.setDateOfBirth(LocalDate.of(year, month+1, day));
-                    */
+
                     user.setRotationAngle(rotation);
                     if(user.getImageFile() == null) {
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.man);
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
                         byte[] imageBytes = byteArrayOutputStream.toByteArray();
-                        String imageString = Base64.encodeBytes(imageBytes);//Base64.encodeToString(imageBytes, Base64.DEFAULT);
+                        String imageString = Base64.encodeBytes(imageBytes);
                         user.setImageFile(imageString);
                     }
 
                     Intent intent = new Intent(MainActivity.this, AbilitiesActivity.class);
-                    intent.putExtra("user_data", user);
-                    startActivity(intent);
+                    intent.putExtra(USER_DATA, user);
+                    startActivityForResult(intent, ABILITIES_CODE);
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Popraw dane!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+
 
     private void checkEditTextIsEmpty(int id){
         EditText editText = findViewById(id);
@@ -278,6 +244,47 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             editText.setBackground(getDrawable(R.drawable.edit_text_red));
             isEverythingCorrect = false;
         }
+    }
+
+    private void setTextInEditText(int id, @Nullable String text){
+        EditText editText = findViewById(id);
+        if(text != null)
+            editText.setText(text);
+        else
+            editText.setText("");
+    }
+
+    private void fillPersonalData(){
+        setTextInEditText(R.id.nameEditText, user.getName());
+        setTextInEditText(R.id.surnameEditText, user.getSurname());
+        if(user.getPhoneNumber() != null)
+            setTextInEditText(R.id.phoneEditText,String.valueOf(user.getPhoneNumber()));
+        else
+            setTextInEditText(R.id.phoneEditText,null);
+        setTextInEditText(R.id.streetEditText, user.getAddress().getStreet());
+        setTextInEditText(R.id.cityEditText, user.getAddress().getCity());
+        setTextInEditText(R.id.emailEditText, user.getEmailAddress());
+
+        if(user.getAddress().getPostCode() != null) {
+            setTextInEditText(R.id.postCodeEditText1, user.getAddress().getPostCode().substring(0, 2));
+            setTextInEditText(R.id.postCodeEditText2, user.getAddress().getPostCode().substring(3, 6));
+        }
+        else{
+            setTextInEditText(R.id.postCodeEditText1, null);
+            setTextInEditText(R.id.postCodeEditText2, null);
+        }
+
+        if(user.getAddress().getFlatNumber() != null &&  user.getAddress().getFlatNumber() >= 0)
+            setTextInEditText(R.id.flatNumberEditText, String.valueOf(user.getAddress().getFlatNumber()));
+        else
+            setTextInEditText(R.id.flatNumberEditText, null);
+
+        if(user.getAddress().getHouseNumber() != null)
+            setTextInEditText(R.id.houseNumberEditText, String.valueOf(user.getAddress().getHouseNumber()));
+        else
+            setTextInEditText(R.id.houseNumberEditText, null);
+
+        setTextInEditText(R.id.shortInfoEditText, user.getShortInfo());
     }
 
     @Override
