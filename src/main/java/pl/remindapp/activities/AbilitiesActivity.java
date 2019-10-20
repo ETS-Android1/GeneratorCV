@@ -1,24 +1,18 @@
 package pl.remindapp.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,13 +32,30 @@ public class AbilitiesActivity extends AppCompatActivity {
     private Button addButton, nextButton;
     private ArrayList<AbilityModel> abilities;
     private Person user;
+    private final int HOBBIES_CODE = 124;
+    private final String USER_DATA = "user_data";
+
+    @Override
+    public void onBackPressed() {
+        List<String> skills = new ArrayList<>();
+        for(int i = 0; i < abilityAdapter.getCount(); i++){
+            skills.add(abilityAdapter.getItem(i).toString());
+        }
+        user.setSkills(skills);
+
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(USER_DATA, user);
+
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view_container_layout);
 
-        user = (Person) getIntent().getSerializableExtra("user_data");
+        user = (Person) getIntent().getSerializableExtra(USER_DATA);
 
         addButton = findViewById(R.id.addButton);
         nextButton = findViewById(R.id.nextButton);
@@ -125,10 +136,26 @@ public class AbilitiesActivity extends AppCompatActivity {
                 }
                 user.setSkills(skills);
                 Intent intent = new Intent(AbilitiesActivity.this, HobbiesActivity.class);
-                intent.putExtra("user_data", user);
-                startActivity(intent);
+                intent.putExtra(USER_DATA, user);
+                startActivityForResult(intent, HOBBIES_CODE);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == HOBBIES_CODE && resultCode == RESULT_OK){
+            user = (Person)data.getSerializableExtra(USER_DATA);
+
+            abilities = new ArrayList<AbilityModel>();
+            for(String element : user.getSkills()){
+                abilities.add(new AbilityModel(element));
+            }
+
+            abilityAdapter = new AbilityAdapter(this.getBaseContext(), R.layout.ability_item, abilities);
+            abilitiesListView.setAdapter(abilityAdapter);
+
+        }
     }
 
     private void addElementToListView(String a){

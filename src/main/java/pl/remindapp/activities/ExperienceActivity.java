@@ -1,5 +1,6 @@
 package pl.remindapp.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -17,7 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.time.LocalDate;
@@ -39,6 +39,34 @@ public class ExperienceActivity extends AppCompatActivity{
     private TextView titleTextView;
     private ListView listView;
     private LocalDate beginDate, endDate;
+    private final int COURSES_CODE = 127;
+    private final String USER_DATA = "user_data";
+
+    @Override
+    public void onBackPressed() {
+        List<LifeEvent> experience = new ArrayList<>();
+        for(int i = 0; i < lifeEventAdapter.getCount(); i++){
+            experience.add(lifeEventAdapter.getItem(i));
+        }
+        user.setExperience(experience);
+
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(USER_DATA, user);
+
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == COURSES_CODE && resultCode == RESULT_OK){
+            user = (Person)data.getSerializableExtra(USER_DATA);
+
+            lifeEventAdapter = new LifeEventAdapter(this, R.layout.life_event_list_item, user.getExperience());
+
+            listView.setAdapter(lifeEventAdapter);
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +75,7 @@ public class ExperienceActivity extends AppCompatActivity{
         setContentView(R.layout.list_view_container_layout);
 
         beginDate = endDate = null;
-        user = (Person) getIntent().getSerializableExtra("user_data");
+        user = (Person) getIntent().getSerializableExtra(USER_DATA);
 
         addButton = findViewById(R.id.addButton);
         nextButton = findViewById(R.id.nextButton);
@@ -119,7 +147,6 @@ public class ExperienceActivity extends AppCompatActivity{
                 final TextView beginDateTextView = customLayout.findViewById(R.id.addLifeEventBeginDateTextView);
                 final Button beginDateButton = customLayout.findViewById(R.id.addLifeEventBeginDateButton);
                 beginDateButton.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(View v) {
                         DatePickerDialog datePickerDialog;
@@ -141,7 +168,6 @@ public class ExperienceActivity extends AppCompatActivity{
                 final TextView endDateTextView = customLayout.findViewById(R.id.addLifeEventEndDateTextView);
                 final Button endDateButton = customLayout.findViewById(R.id.addLifeEventEndDateButton);
                 endDateButton.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(View v) {
                         DatePickerDialog datePickerDialog;
@@ -173,8 +199,8 @@ public class ExperienceActivity extends AppCompatActivity{
                 }
                 user.setExperience(experience);
                 Intent intent = new Intent(ExperienceActivity.this, CoursesActivity.class);
-                intent.putExtra("user_data", user);
-                startActivity(intent);
+                intent.putExtra(USER_DATA, user);
+                startActivityForResult(intent, COURSES_CODE);
             }
         });
     }

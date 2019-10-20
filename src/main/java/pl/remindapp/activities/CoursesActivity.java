@@ -1,5 +1,6 @@
 package pl.remindapp.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -17,7 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.time.LocalDate;
@@ -34,10 +34,35 @@ public class CoursesActivity extends AppCompatActivity {
     private LifeEventAdapter lifeEventAdapter;
     private LinearLayout mainLayout;
     private Button addButton, nextButton;
-    private ArrayList<LifeEvent> lifeEventArrayList;
     private TextView titleTextView;
     private ListView listView;
     private LocalDate beginDate, endDate;
+    private final int TEMPLATES_CODE = 128;
+    private final String USER_DATA = "user_data";
+
+    @Override
+    public void onBackPressed() {
+        List<LifeEvent> courses = new ArrayList<>();
+        for (int i = 0; i < lifeEventAdapter.getCount(); i++) {
+            courses.add(lifeEventAdapter.getItem(i));
+        }
+        user.setCourses(courses);
+
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(USER_DATA, user);
+
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == TEMPLATES_CODE && resultCode == RESULT_OK){
+            user = (Person)data.getSerializableExtra(USER_DATA);
+            lifeEventAdapter = new LifeEventAdapter(this, R.layout.life_event_list_item, user.getCourses());
+            listView.setAdapter(lifeEventAdapter);
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +71,7 @@ public class CoursesActivity extends AppCompatActivity {
         setContentView(R.layout.list_view_container_layout);
 
         beginDate = endDate = null;
-        user = (Person) getIntent().getSerializableExtra("user_data");
+        user = (Person) getIntent().getSerializableExtra(USER_DATA);
 
         addButton = findViewById(R.id.addButton);
         nextButton = findViewById(R.id.nextButton);
@@ -70,9 +95,6 @@ public class CoursesActivity extends AppCompatActivity {
                 }
             }
         });
-
-        lifeEventArrayList = new ArrayList<LifeEvent>();
-
         lifeEventAdapter = new LifeEventAdapter(this, R.layout.life_event_list_item, user.getCourses());
 
         listView.setAdapter(lifeEventAdapter);
@@ -118,7 +140,6 @@ public class CoursesActivity extends AppCompatActivity {
                 final TextView beginDateTextView = customLayout.findViewById(R.id.addLifeEventBeginDateTextView);
                 final Button beginDateButton = customLayout.findViewById(R.id.addLifeEventBeginDateButton);
                 beginDateButton.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(View v) {
                         DatePickerDialog datePickerDialog;
@@ -140,7 +161,6 @@ public class CoursesActivity extends AppCompatActivity {
                 final TextView endDateTextView = customLayout.findViewById(R.id.addLifeEventEndDateTextView);
                 final Button endDateButton = customLayout.findViewById(R.id.addLifeEventEndDateButton);
                 endDateButton.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(View v) {
                         DatePickerDialog datePickerDialog;
@@ -172,8 +192,8 @@ public class CoursesActivity extends AppCompatActivity {
                 }
                 user.setCourses(courses);
                 Intent intent = new Intent(CoursesActivity.this, ChooseCvTemplateActivity.class);
-                intent.putExtra("user_data", user);
-                startActivity(intent);
+                intent.putExtra(USER_DATA, user);
+                startActivityForResult(intent, TEMPLATES_CODE);
             }
         });
     }

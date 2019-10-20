@@ -1,8 +1,8 @@
 package pl.remindapp.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -30,16 +30,48 @@ public class HobbiesActivity extends AppCompatActivity {
     private AbilityAdapter abilityAdapter;
     private LinearLayout mainLayout;
     private Button addButton, nextButton;
-    private ArrayList<AbilityModel> carL;
+    private ArrayList<AbilityModel> hobbies;
     private TextView titleTextView;
     private Person user;
+    private final int EDUCATION_CODE = 125;
+    private final String USER_DATA = "user_data";
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == EDUCATION_CODE && resultCode == RESULT_OK){
+            user = (Person)data.getSerializableExtra(USER_DATA);
+
+            hobbies = new ArrayList<AbilityModel>();
+            for(String element : user.getSkills()){
+                hobbies.add(new AbilityModel(element));
+            }
+
+            abilityAdapter = new AbilityAdapter(this, R.layout.ability_item, hobbies);
+            listView.setAdapter(abilityAdapter);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        List<String> hobbies = new ArrayList<>();
+        for(int i = 0; i < abilityAdapter.getCount(); i++){
+            hobbies.add(abilityAdapter.getItem(i).toString());
+        }
+        user.setInterest(hobbies);
+
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(USER_DATA, user);
+
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view_container_layout);
 
-        user = (Person) getIntent().getSerializableExtra("user_data");
+        user = (Person) getIntent().getSerializableExtra(USER_DATA);
 
         addButton = findViewById(R.id.addButton);
         nextButton = findViewById(R.id.nextButton);
@@ -65,12 +97,12 @@ public class HobbiesActivity extends AppCompatActivity {
         });
 
         listView.setDivider(null);
-        carL = new ArrayList<AbilityModel>();
+        hobbies = new ArrayList<AbilityModel>();
         for(String element : user.getInterest()){
-            carL.add(new AbilityModel(element));
+            hobbies.add(new AbilityModel(element));
         }
 
-        abilityAdapter = new AbilityAdapter(this, R.layout.ability_item, carL);
+        abilityAdapter = new AbilityAdapter(this, R.layout.ability_item, hobbies);
 
         listView.setAdapter(abilityAdapter);
 
@@ -124,8 +156,8 @@ public class HobbiesActivity extends AppCompatActivity {
                 }
                 user.setInterest(hobbies);
                 Intent intent = new Intent(HobbiesActivity.this, EducationActivity.class);
-                intent.putExtra("user_data", user);
-                startActivity(intent);
+                intent.putExtra(USER_DATA, user);
+                startActivityForResult(intent, EDUCATION_CODE);
             }
         });
     }

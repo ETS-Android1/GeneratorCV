@@ -66,4 +66,7 @@ public class AbilityAdapter extends ArrayAdapter<AbilityModel> {
         return convertView;
     }
 
+    public List<AbilityModel> getObjects() {
+        return objects;
+    }
 }
