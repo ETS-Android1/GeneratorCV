@@ -4,13 +4,15 @@ import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Address implements Serializable {
     private String street;
-    private int houseNumber;
-    private int flatNumber;
+    private Integer houseNumber;
+    private Integer flatNumber;
     private Character houseLetter;
     private String postCode;
     private String city;
