@@ -36,8 +36,7 @@ public class ChooseCvTemplateActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(letBack) {
-            System.out.println(user.getChosenTemplate());
+        if (letBack) {
             Intent resultIntent = new Intent();
             resultIntent.putExtra(USER_DATA, user);
 
@@ -47,45 +46,42 @@ public class ChooseCvTemplateActivity extends AppCompatActivity {
     }
 
     @Override
-        protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         letBack = true;
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.cv_templates_layout);
-            user = (Person) getIntent().getSerializableExtra(USER_DATA);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.cv_templates_layout);
+        user = (Person) getIntent().getSerializableExtra(USER_DATA);
 
-        System.out.println(user.getChosenTemplate());
-            if(user.getChosenTemplate() == 0){
-                change(null);
-            }
-
-            if(user.getChosenTemplate() == 1){
-                change1(null);
-            }
-
-            if(user.getChosenTemplate() == 2){
-                change2(null);
-            }
-
-
-            Button nextButton = findViewById(R.id.nextTemplateButton);
-            nextButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
-                        if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                            String []permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                            requestPermissions(permissions, STORAGE_CODE);
-                        }
-                        else
-                            savePDF();
-                    }
-                    else
-                        savePDF();
-                }
-            });
+        if (user.getChosenTemplate() == 0) {
+            change(null);
         }
 
-    public void change(View v){
+        if (user.getChosenTemplate() == 1) {
+            change1(null);
+        }
+
+        if (user.getChosenTemplate() == 2) {
+            change2(null);
+        }
+
+
+        Button nextButton = findViewById(R.id.nextTemplateButton);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        requestPermissions(permissions, STORAGE_CODE);
+                    } else
+                        savePDF();
+                } else
+                    savePDF();
+            }
+        });
+    }
+
+    public void change(View v) {
         ImageView imageView = findViewById(R.id.templateButton);
         imageView.setImageResource(R.drawable.ok);
 //        ImageView imageView1 = findViewById(R.id.template1Button);
@@ -95,7 +91,7 @@ public class ChooseCvTemplateActivity extends AppCompatActivity {
         user.setChosenTemplate(0);
     }
 
-    public void change1(View v){
+    public void change1(View v) {
         ImageView imageView = findViewById(R.id.templateButton);
         imageView.setImageResource(R.drawable.no_ok);
 //        ImageView imageView1 = findViewById(R.id.template1Button);
@@ -105,7 +101,7 @@ public class ChooseCvTemplateActivity extends AppCompatActivity {
         user.setChosenTemplate(1);
     }
 
-    public void change2(View v){
+    public void change2(View v) {
         ImageView imageView = findViewById(R.id.templateButton);
         imageView.setImageResource(R.drawable.no_ok);
 //        ImageView imageView1 = findViewById(R.id.template1Button);
@@ -117,9 +113,9 @@ public class ChooseCvTemplateActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch(requestCode){
-            case STORAGE_CODE:{
-                if(grantResults.length > 0  && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        switch (requestCode) {
+            case STORAGE_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     savePDF();
                 else
                     Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
@@ -128,7 +124,7 @@ public class ChooseCvTemplateActivity extends AppCompatActivity {
     }
 
     private void savePDF() {
-        String filePath = Environment.getExternalStorageDirectory() + "/Download/" + user.getName() + user.getSurname() +"CV.pdf";
+        String filePath = Environment.getExternalStorageDirectory() + "/Download/" + user.getName() + user.getSurname() + "CV.pdf";
         int maxFontSize = 30;
         Collections.sort(user.getExperience());
         Collections.sort(user.getEducation());
