@@ -1,6 +1,8 @@
 # GeneratorCV
 Generator CV for Android devices. To generate PDF file was used iText5. There is a nice design for better feeling. All data typed in by user is temoprary. Application do not need any account and data isn't stored.
 
+APK file available under: [Download App](https://drive.google.com/open?id=1KUAVfb3B9AUQSx8xkHYvVGaju0SRCj4F "Generator CV APK download")
+
 ***
 #### START WINDOW:
 First screen after lauching application. Simple image with 'zoom in' animation.
